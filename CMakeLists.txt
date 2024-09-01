@@ -10,4 +10,6 @@ add_executable(
 mystring
 mystring.h
 main.cpp
+catch.hpp
+UnitTests.cpp
 )
