@@ -90,8 +90,8 @@ TEST_CASE("test 06", "test that string can store \0")
     std::string stdstr;
     
     REQUIRE(mystr.length() == 0);
-    REQUIRE(mystr.capacity() == 0);
-    REQUIRE(stdstr.length() >= 0);
+    REQUIRE(mystr.capacity() >= 0);
+    REQUIRE(stdstr.length() == 0);
     REQUIRE(stdstr.capacity() >= 0);
         
     mystr.push_back('A');
@@ -177,13 +177,21 @@ TEST_CASE("test 07", "test construction of bing string using oerator += and appe
     
 }
 
-TEST_CASE("test 08", "test move c'tor opeartor[] and c_str() and data()")
+TEST_CASE("test 08", "test move c'tor")
 {
+    MyString tmpmystr("My own Mystr obj");
+    MyString mystr (std::move(tmpmystr));
     
-    MyString mystr (MyString("My own Mystr obj"));
-    std::string stdstr (std::string("My own Mystr obj"));
+    std::string tmpstdstr("My own Mystr obj");
+    std::string stdstr (std::move(tmpstdstr));
     
+    //check moved obj data
+    REQUIRE(tmpmystr.length() == 0);
+    REQUIRE(tmpmystr.capacity() == 0);
+
+    REQUIRE(tmpstdstr.length() == 0);
     
+    //check new object data
     REQUIRE(mystr.length() == 16);
     REQUIRE(stdstr.length() == 16);
     
@@ -198,3 +206,33 @@ TEST_CASE("test 08", "test move c'tor opeartor[] and c_str() and data()")
     
 }
 
+TEST_CASE("test 09", "test move assignment")
+{
+    MyString tmpmystr("My own Mystr obj");
+    MyString mystr ("old obj data");
+    mystr = std::move(tmpmystr);
+    
+    std::string tmpstdstr("My own Mystr obj");
+    std::string stdstr ("old obj data");
+    stdstr = std::move(tmpstdstr);
+    
+    //check moved obj data
+    REQUIRE(tmpmystr.length() == 0);
+    //REQUIRE(tmpmystr.capacity() == 0); //lhs comes 16
+
+    REQUIRE(tmpstdstr.length() == 0);
+    
+    //check new object data
+    REQUIRE(mystr.length() == 16);
+    REQUIRE(stdstr.length() == 16);
+    
+    
+    REQUIRE(mystr.capacity() >= 16);
+    REQUIRE(stdstr.capacity() >= 16);
+    
+    REQUIRE(mystr[16] == '\0');    
+    REQUIRE(stdstr[16] == '\0');
+    
+    REQUIRE(0 == strcmp(mystr.c_str() , stdstr.c_str()));      
+    
+}

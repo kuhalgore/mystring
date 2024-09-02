@@ -9,6 +9,7 @@ It makes use of vector<char> internally to store the data.
 
 - length()
 - capacity()
+- clear()
 - c_str()
 - data()
 - push_back()
@@ -30,9 +31,12 @@ make sure that the functionality works in same way for std::string class.
 
 ## How to run the sample code?
 when no arguments is passed, the code executes basic checks given in the main function.
-./mystring
+for example,
+./mystring.exe
+
 when single argument "run_unittests" is passed, the code executes the unit test cases present in UnitTests.cpp
-./mystring "run_unittests"
+for example,
+./mystring.exe "run_unittests"
 
 
 

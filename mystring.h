@@ -19,21 +19,14 @@ class MyString
     {
         return buff_.data();
     }
-    
-    
+        
     const char* c_str() const noexcept
     {
-        //data_ = new char[buff_.size() + 1];
-        //std::memcpy(data_, buff_.data(), buff_.size());
-        //data_[buff_.size()] = '\0';
-        //return data_;
         return buff_.data();
-        
     }
     
     //destructor
     ~MyString() = default;
-    
      
     //constructors
     //default
@@ -50,8 +43,8 @@ class MyString
             buff_.push_back(src[i]);
         }
         buff_.push_back('\0');
-        
     }
+    
     //with initializer list
     MyString(std::initializer_list<char> srcInitList) : buff_{srcInitList} 
     {
@@ -59,11 +52,12 @@ class MyString
     }
 
     //copy c'tors
-    MyString(const MyString & other) = default;    
+    MyString(const MyString & other) = default;  
+    
     MyString& operator = (const MyString & other)
     {
         if(this != &other)
-        {
+        {            
             buff_ = other.buff_;
         }
         return *this;
@@ -92,21 +86,15 @@ class MyString
 
     //friend std::ostream& operator << (std::ostream& oo, const MyString& obj);
     friend std::ostream& operator << (std::ostream& oo, const MyString& obj)
-{
-    if(!obj.buff_.empty())
-    {
+    {              
         for(auto c : obj.buff_)
             oo<<c;
         
         return oo;
     }
-    else
-        return oo<<"";
-    
-}
     
     void push_back(char c)
-    {
+    {        
         if(buff_.empty())
             buff_.push_back(c);
         else 
@@ -115,7 +103,7 @@ class MyString
             //hence add the new character at that position and push_back('\0') latter
             buff_[length()] = c;
         }
-        buff_.push_back('\0');
+        buff_.push_back('\0');   
     }
     
     //append
@@ -144,7 +132,5 @@ class MyString
     
     
 private:
-    std::vector<char> buff_;
-    //mutable char *data_;
-    
+    std::vector<char>  buff_;   
 };
