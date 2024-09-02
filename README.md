@@ -7,17 +7,29 @@ It makes use of vector<char> internally to store the data.
 
 ### public methods of MyString
 
+//getters
 - length()
 - capacity()
-- clear()
 - c_str()
 - data()
+
+
+//modifieers
 - push_back()
 - operator +=
 - append()
-- push_back()
-- c_str()
+- clear()
+- operator []
+
+//non-modifiers
+compare()
+substr()
+find()
+find_first_of()
+
+//friend functions
 - operator <<
+- operator ==
 
 ## main.cpp
 A sample code to check the the functionality provided by MyString class.

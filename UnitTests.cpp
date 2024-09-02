@@ -236,3 +236,173 @@ TEST_CASE("test 09", "test move assignment")
     REQUIRE(0 == strcmp(mystr.c_str() , stdstr.c_str()));      
     
 }
+
+TEST_CASE("test 10", "test move assignment")
+{
+    MyString mystr("My own Mystr object");
+    auto initialLength = mystr.length();
+    
+    mystr.pop_back();
+    REQUIRE(mystr.length() == initialLength-1);
+    
+    mystr.pop_back();
+    REQUIRE(mystr.length() == initialLength-2);
+
+    mystr.pop_back();
+    REQUIRE(mystr.length() == initialLength-3);
+    
+    MyString mystr2;
+    mystr2.pop_back();
+    mystr2.pop_back();
+    mystr2.pop_back();
+    REQUIRE(mystr2.length() == 0); //safe to call pop_back() on empty string
+    
+    MyString mystr3("T"); // string with single char
+    mystr3.pop_back();
+    REQUIRE(mystr2.length() == 0); //length becomes 0
+    
+    REQUIRE(mystr2 == MyString()); // it is equal to empty string
+    
+}
+
+TEST_CASE("test 11", "test ==")
+{
+    MyString mystr("abc_123");
+    const char* tmp = "abc_123";
+    
+    REQUIRE(mystr == tmp); 
+    REQUIRE(tmp == mystr);  
+    REQUIRE(mystr.c_str() == mystr); 
+    REQUIRE(mystr == "abc_123"); 
+    REQUIRE("abc_123"== mystr); 
+    
+    REQUIRE(MyString("")== MyString());  //empty string
+    REQUIRE(MyString("").length()== 0);  //empty string length zero
+    REQUIRE(MyString("").empty()== true);  //string of length zero is empty
+    REQUIRE(MyString().empty()== true);  
+}
+
+TEST_CASE("test 12", "test compare")
+{
+    //MyString
+    MyString mystr1("abc_123");
+    MyString mystr2("abc_133");
+    MyString mystr3("aBc_123");
+    MyString mystr4("pqr");
+    MyString mystr5("Abc");
+    
+    REQUIRE(0 == mystr1.compare(mystr1)); // self check
+    REQUIRE(mystr1.compare(mystr2) < 0); // mystr1 < mystr2
+    REQUIRE(mystr1.compare(mystr3) > 0); // mystr1 > mystr3
+    REQUIRE(mystr1.compare(mystr4) < 0); // mystr1 < mystr4 because firt char of mystr1 < firt char of mystr4 
+    REQUIRE(mystr1.compare(mystr5) > 0); // mystr1 > mystr5 because firt char of mystr1 > firt char of mystr5
+    
+    //std::string
+    std::string str1("abc_123");
+    std::string str2("abc_133");
+    std::string str3("aBc_123");
+    std::string str4("pqr");
+    std::string str5("Abc");
+    
+    REQUIRE(0 == str1.compare(str1)); // self check
+    REQUIRE(str1.compare(str2) < 0); // str1 < str2
+    REQUIRE(str1.compare(str3) > 0); // str1 > str3
+    REQUIRE(str1.compare(str4) < 0); // str1 < str4 because firt char of str1 < firt char of str4 
+    REQUIRE(str1.compare(str5) > 0); // str1 > str5 because firt char of str1 > firt char of str5
+    
+}
+
+
+TEST_CASE("test 13", "test front and back")
+{
+    //MyString
+    MyString mystr("abc_123");
+    REQUIRE(mystr.front() == 'a');
+    REQUIRE(mystr.back() == '3');
+    
+    mystr.front() = 'A';
+    REQUIRE(mystr.front() == 'A');
+
+    mystr.back() = '4';
+    REQUIRE(mystr.back() == '4');
+    
+    REQUIRE(mystr == "Abc_124");
+    
+    //std::string
+    std::string str("abc_123");
+    REQUIRE(str.front() == 'a');
+    REQUIRE(str.back() == '3');
+    
+    str.front() = 'A';
+    REQUIRE(str.front() == 'A');
+
+    str.back() = '4';
+    REQUIRE(str.back() == '4');
+    
+    REQUIRE(str == "Abc_124");
+}
+
+
+TEST_CASE("test 14", "test substr")
+{
+    //MyString
+    MyString mystr("white apple");
+    REQUIRE(mystr.substr() == mystr);
+    REQUIRE(mystr.substr(6) == "apple");
+    REQUIRE(mystr.substr(2,7) == "ite app");
+    REQUIRE(mystr.substr(2, MyString::npos) == "ite apple");
+    
+    //std::string
+    std::string str("white apple");
+    REQUIRE(str.substr() == str);
+    REQUIRE(str.substr(6) == "apple");
+    REQUIRE(str.substr(2,7) == "ite app");
+    REQUIRE(str.substr(2, std::string::npos) == "ite apple");
+}
+
+TEST_CASE("test 15", "test find")
+{
+    {
+        //MyString
+        MyString mystr("white apple and black apple");
+        auto posFirstApple = mystr.find("apple");
+        REQUIRE(posFirstApple == 6);
+        auto posSecondApple = mystr.find("apple", posFirstApple + 1);
+        REQUIRE(posSecondApple == 22);
+
+        REQUIRE(mystr.find('p') == 7);
+        REQUIRE(mystr.find('p',9) == 23);
+    }
+    {
+        //std::string
+        std::string str("white apple and black apple");
+        auto posFirstApple = str.find("apple");
+        REQUIRE(posFirstApple == 6);
+        auto posSecondApple = str.find("apple", posFirstApple + 1);
+        REQUIRE(posSecondApple == 22);
+    }
+    
+}
+
+TEST_CASE("test 16", "test find_first_of")
+{
+    {
+        //MyString
+        MyString mystr("white apple");
+        auto posFirst = mystr.find_first_of("xyz");
+        REQUIRE(posFirst == MyString::npos);
+
+        auto posSecond = mystr.find_first_of("aeiou");
+        REQUIRE(posSecond == 2);
+    }
+    {
+        //std::string
+        std::string str("white apple");
+        auto posFirst = str.find_first_of("xyz");
+        REQUIRE(posFirst == MyString::npos);
+
+        auto posSecond = str.find_first_of("aeiou");
+        REQUIRE(posSecond == 2);
+    }
+
+}
