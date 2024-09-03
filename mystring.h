@@ -83,7 +83,6 @@ public:
         if(this != &other)
         {
             buff_.clear();
-            buff_.shrink_to_fit();
             buff_.swap(other.buff_);
         }
         return *this;
@@ -169,6 +168,7 @@ public:
     }
     
     void clear() { buff_.clear(); }
+
     void shrink_to_fit() 
     {
         buff_.shrink_to_fit();
@@ -297,7 +297,7 @@ public:
     }
     
     
-    static const size_t npos = -1;
+    static inline const size_t npos = -1;
 private:
     std::vector<char>  buff_;   
 };
