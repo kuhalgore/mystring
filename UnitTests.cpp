@@ -3,7 +3,6 @@
 #include "mystring.h"
 #include "catch.hpp"
 
-
 TEST_CASE("test 01", "test length and capacity of string constructed from const char *") 
 {
     MyString mystr("My own Mystr obj");
@@ -14,30 +13,36 @@ TEST_CASE("test 01", "test length and capacity of string constructed from const 
     REQUIRE(mystr.capacity() >= 16);
     REQUIRE(stdstr.capacity() >= 16);
     
-    
 }
 
 TEST_CASE("test 02", "test length and capacity when string string constructed from const char * contains \\0 in betweeen")
 {
     MyString mystr("abc\0xyz");
+    MyString mystr2{"abc\0xyz", 7};
     std::string stdstr("abc\0xyz");
+    std::string stdstr2{"abc\0xyz", 7};
     
     REQUIRE(mystr.length() == 3);
     REQUIRE(stdstr.length() == 3);
     REQUIRE(mystr.capacity() >= 3);
     REQUIRE(stdstr.capacity() >= 3);
     
+    REQUIRE(mystr2.length() == 7);
+    REQUIRE(stdstr2.length() == 7);
+    REQUIRE(mystr2.capacity() >= 7);
+    REQUIRE(stdstr2.capacity() >= 7);
+
 }
 
 TEST_CASE("test 03", "test length and capacity when string string constructed from initializer list")
 {
-    MyString mystr{"abcxyz"};
-    std::string stdstr{"abcxyz"};
+    MyString mystr{'a', 'b', 'c', 'x', '\0', '\0', 'y', 'z'};
+    std::string stdstr = {'a', 'b', 'c', '\0', '\0', 'x', 'y', 'z'};
     
-    REQUIRE(mystr.length() == 6);
-    REQUIRE(stdstr.length() == 6);
-    REQUIRE(mystr.capacity() >= 6);
-    REQUIRE(stdstr.capacity() >= 6);
+    REQUIRE(mystr.length() == 8);
+    REQUIRE(stdstr.length() == 8);
+    REQUIRE(mystr.capacity() >= 8);
+    REQUIRE(stdstr.capacity() >= 8);
     
 }
 
@@ -195,7 +200,6 @@ TEST_CASE("test 08", "test move c'tor")
     REQUIRE(mystr.length() == 16);
     REQUIRE(stdstr.length() == 16);
     
-    
     REQUIRE(mystr.capacity() >= 16);
     REQUIRE(stdstr.capacity() >= 16);
     
@@ -218,9 +222,8 @@ TEST_CASE("test 09", "test move assignment")
     
     //check moved obj data
     REQUIRE(tmpmystr.length() == 0);
-    //REQUIRE(tmpmystr.capacity() == 0); //lhs comes 16
 
-    REQUIRE(tmpstdstr.length() == 0);
+    REQUIRE(tmpstdstr.length() == 0);    
     
     //check new object data
     REQUIRE(mystr.length() == 16);
@@ -403,6 +406,55 @@ TEST_CASE("test 16", "test find_first_of")
 
         auto posSecond = str.find_first_of("aeiou");
         REQUIRE(posSecond == 2);
+    }
+
+}
+
+TEST_CASE("test 17", "test swap")
+{
+    {
+        //MyString
+        MyString mystr("white");
+        MyString tmp;
+        tmp.swap(mystr);
+        
+        REQUIRE(tmp == "white");
+        REQUIRE(mystr == "");
+        
+    }
+    {
+        //std::string
+        std::string str("white");
+        std::string tmp;
+        tmp.swap(str);
+        
+        REQUIRE(tmp == "white");
+        REQUIRE(str == "");
+    }
+
+}
+
+TEST_CASE("test 18", "test shrink_to_fit")
+{
+    {
+        //MyString
+        MyString mystr("white black red blue indigo");
+        REQUIRE(mystr.capacity() >= mystr.length());
+        
+        mystr = "white";
+        auto capBefore = mystr.capacity();
+        mystr.shrink_to_fit();
+        REQUIRE(capBefore >= mystr.capacity());
+    }
+    {
+        //std::string
+        std::string str("white black red blue indigo");
+        REQUIRE(str.capacity() >= str.length());
+        
+        str = "white";
+        auto capBefore = str.capacity();
+        str.shrink_to_fit();
+        REQUIRE(capBefore >= str.capacity());
     }
 
 }

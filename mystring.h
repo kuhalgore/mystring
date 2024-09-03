@@ -8,8 +8,8 @@
 
 class MyString
 {
-   
- public:
+    
+public:
 
     //getters
     size_t length() const {return buff_.empty()? 0 : buff_.size()-1;}
@@ -33,27 +33,32 @@ class MyString
     //default
     MyString() = default;
     
-    //from const char*
-    MyString(const char* src):MyString()
+    MyString(std::nullptr_t ) = delete;
+    
+    //from const char*, with specified len
+    MyString(const char* src, size_t len)
     {
-        if(src == nullptr)
-            return;
-        size_t iLen = strlen(src);
-        if(iLen == 0)
+        if(len == 0)
             return;
         
-        for(size_t i =0 ; i< iLen; ++i)
+        for(size_t i =0 ; i< len; ++i)
         {
             buff_.push_back(src[i]);
         }
         buff_.push_back('\0');
     }
     
-    //with initializer list
+    //from const char*
+    MyString(const char* src) : MyString(src, strlen(src)) //constructor delegation 
+    {
+    }
+    
+    //from initializer list
     MyString(std::initializer_list<char> srcInitList) : buff_{srcInitList} 
     {
         buff_.push_back('\0');
     }
+    
 
     //copy c'tors
     MyString(const MyString & other) = default;  
@@ -78,6 +83,7 @@ class MyString
         if(this != &other)
         {
             buff_.clear();
+            buff_.shrink_to_fit();
             buff_.swap(other.buff_);
         }
         return *this;
@@ -98,6 +104,11 @@ class MyString
     char& back()//this function shuld not be called on empty string
     {
         return buff_[length()-1];
+    }
+    
+    void swap(MyString &other)
+    {
+        buff_.swap(other.buff_);
     }
 
     //apend a char at the end 
@@ -157,8 +168,11 @@ class MyString
         return *this;
     }
     
-    
     void clear() { buff_.clear(); }
+    void shrink_to_fit() 
+    {
+        buff_.shrink_to_fit();
+    }
     
     //non modifiers
     
@@ -252,24 +266,12 @@ class MyString
             auto foundIndx = this->find(text[i], pos);
             if (foundIndx < retIndx)
                 retIndx = foundIndx;
-
-            //auto it = std::find(buff_.begin() + pos, buff_.end(), text[i]);
-            //if (it != buff_.end())
-            //{
-                //size_t foundIndx = std::distance(buff_.begin() + pos, it);
-                //if (foundIndx < retIndx)
-                //    retIndx = foundIndx;
-            //}
         }
 
         return retIndx;
     }
 
-
-    
-    
-    //friend operators
-    
+    //friend operators   
     friend std::ostream& operator << (std::ostream& oo, const MyString& obj)
     {              
         for(auto c : obj.buff_)
@@ -299,4 +301,3 @@ class MyString
 private:
     std::vector<char>  buff_;   
 };
-  
