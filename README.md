@@ -22,14 +22,14 @@ It makes use of vector<char> internally to store the data.
 - operator []
 
 //non-modifiers
-compare()
-substr()
-find()
-find_first_of()
-find_first_not_of()
-rfind()
-find_last_of()
-find_last_not_of()
+- compare()
+- substr()
+- find()
+- find_first_of()
+- find_first_not_of()
+- rfind()
+- find_last_of()
+- find_last_not_of()
 
 
 
