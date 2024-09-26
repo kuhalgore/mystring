@@ -26,6 +26,12 @@ compare()
 substr()
 find()
 find_first_of()
+find_first_not_of()
+rfind()
+find_last_of()
+find_last_not_of()
+
+
 
 //friend functions
 - operator <<
@@ -44,11 +50,9 @@ make sure that the functionality works in same way for std::string class.
 ## How to run the sample code?
 when no arguments is passed, the code executes basic checks given in the main function.
 for example,
-./mystring.exe
+mystring.exe
 
 when single argument "run_unittests" is passed, the code executes the unit test cases present in UnitTests.cpp
 for example,
-./mystring.exe "run_unittests"
-
-
+mystring.exe "run_unittests"
 
