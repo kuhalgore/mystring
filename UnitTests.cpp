@@ -353,6 +353,9 @@ TEST_CASE("test 14", "test substr")
     REQUIRE(mystr.substr() == mystr);
     REQUIRE(mystr.substr(6) == "apple");
     REQUIRE(mystr.substr(2,7) == "ite app");
+    REQUIRE(mystr.substr(0,11) == mystr);
+    REQUIRE(mystr.substr(11) == "");
+    REQUIRE(mystr.substr(0,MyString::npos) == mystr);
     REQUIRE(mystr.substr(2, MyString::npos) == "ite apple");
     
     //std::string
@@ -455,6 +458,127 @@ TEST_CASE("test 18", "test shrink_to_fit")
         auto capBefore = str.capacity();
         str.shrink_to_fit();
         REQUIRE(capBefore >= str.capacity());
+    }
+
+}
+
+TEST_CASE("test 19", "test find_first_not_of")
+{
+    {
+        //MyString
+        MyString mystr("white apple");
+        auto posFirst = mystr.find_first_not_of("xyz");
+        REQUIRE(posFirst == 0);
+
+        auto posSecond = mystr.find_first_not_of(" whiteple");
+        REQUIRE(posSecond == 6);
+        
+        auto posThird = mystr.find_first_not_of(" whiteplea");
+        REQUIRE(posThird == MyString::npos);
+    }
+    {
+        //std::string
+        std::string mystr("white apple");
+        auto posFirst = mystr.find_first_not_of("xyz");
+        REQUIRE(posFirst == 0);
+
+        auto posSecond = mystr.find_first_not_of(" whiteple");
+        REQUIRE(posSecond == 6);
+        
+        auto posThird = mystr.find_first_not_of(" whiteplea");
+        REQUIRE(posThird == MyString::npos);
+    }
+
+}
+
+TEST_CASE("test 20", "test rfind")
+{
+    {
+        //MyString
+        MyString mystr("white apple and black apple");
+        auto posFirstApple = mystr.rfind("apple");
+        REQUIRE(posFirstApple == 22);
+        auto posSecondApple = mystr.rfind("apple", posFirstApple-1);
+        REQUIRE(posSecondApple == 6);
+
+        auto posFirstA = mystr.rfind('a');
+        auto posSecondA = mystr.rfind('a', posFirstA - 1);
+        REQUIRE(posFirstA == 22);
+        REQUIRE(posSecondA == 18);
+
+        auto posofW = mystr.rfind('w');
+        REQUIRE(posofW == 0);
+
+    }
+    {
+        //std::string
+        std::string str("white apple and black apple");
+        auto posFirstApple = str.rfind("apple");
+        REQUIRE(posFirstApple == 22);
+        auto posSecondApple = str.rfind("apple", posFirstApple - 1);
+        REQUIRE(posSecondApple == 6);
+        auto posFirstA = str.rfind('a');
+        auto posSecondA =str.rfind('a', posFirstA - 1);
+        REQUIRE(posFirstA == 22);
+        REQUIRE(posSecondA == 18);
+
+        auto posofW = str.rfind('w');
+        REQUIRE(posofW == 0);
+    }
+
+}
+
+
+TEST_CASE("test 21", "test find_last_of")
+{
+    {
+        //MyString
+        MyString mystr("white apple and black apple");
+
+        auto posFirstApple = mystr.find_last_of("kp");
+        REQUIRE(posFirstApple == 24);
+
+        auto posSecondApple = mystr.find_last_of("ib");
+        REQUIRE(posSecondApple == 16);
+
+    }
+    {
+        //std::string
+        std::string mystr("white apple and black apple");
+
+        auto posFirstApple = mystr.find_last_of("kp");
+        REQUIRE(posFirstApple == 24);
+
+        auto posSecondApple = mystr.find_last_of("ib");
+        REQUIRE(posSecondApple == 16);
+    }
+}
+
+TEST_CASE("test 22", "test find_last_not_of")
+{
+    {
+        //MyString
+        MyString mystr("white apple");
+        auto posFirst = mystr.find_last_not_of("xyz");
+        REQUIRE(posFirst == 10);
+
+        auto posSecond = mystr.find_last_not_of(" whiteple");
+        REQUIRE(posSecond == 6);
+
+        auto posThird = mystr.find_last_not_of(" whiteplea");
+        REQUIRE(posThird == MyString::npos);
+    }
+    {
+        //std::string
+        std::string mystr("white apple");
+        auto posFirst = mystr.find_last_not_of("xyz");
+        REQUIRE(posFirst == 10);
+
+        auto posSecond = mystr.find_last_not_of(" whiteple");
+        REQUIRE(posSecond == 6);
+
+        auto posThird = mystr.find_last_not_of(" whiteplea");
+        REQUIRE(posThird == MyString::npos);
     }
 
 }

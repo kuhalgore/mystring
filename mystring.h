@@ -4,6 +4,9 @@
 #include <iostream>
 #include <stdexcept>
 #include <iterator>
+#include <array>
+#include <variant>
+#include <algorithm>
 // A simple implementation of a string class
 
 class MyString
@@ -38,14 +41,14 @@ public:
     //from const char*, with specified len
     MyString(const char* src, size_t len)
     {
-        if(len == 0)
-            return;
+       if(len == 0)
+          return;
+
+       
+       std::copy(src, src + len, std::back_inserter(buff_));       
+       buff_.push_back('\0');
         
-        for(size_t i =0 ; i< len; ++i)
-        {
-            buff_.push_back(src[i]);
-        }
-        buff_.push_back('\0');
+        
     }
     
     //from const char*
@@ -271,6 +274,129 @@ public:
         return retIndx;
     }
 
+    size_t rfind(const MyString& text, size_t pos = npos) const
+    {
+
+        auto len = length();
+        if (pos + 1 > len)
+            return npos;
+
+        size_t retIndx = npos;
+        auto textLen = text.length();
+        auto endPos = pos;
+        auto startPos = (endPos == npos) ? (len - textLen) : (endPos - textLen);
+
+        for (auto i = startPos; (i > 0 ); --i)
+        {
+            if (text == substr(i, textLen))
+            {
+                return i;
+            }
+        }
+
+        return retIndx;
+    }
+
+    size_t rfind(char c, size_t pos = npos) const
+    {
+
+        auto len = length();
+        if (pos + 1 > len)
+            return npos;
+
+        size_t retIndx = npos;
+        auto textLen = 1;
+        auto endPos = pos;
+        auto startPos = (endPos == npos) ? (len - textLen) : (endPos - textLen);
+
+        size_t i = startPos;
+        while(i >= 0)
+        {
+            if (c == buff_[i])
+            {
+                return i;
+            }
+            --i;
+        }
+
+        return retIndx;
+    }
+
+    size_t find_last_of(const MyString& text, size_t pos = npos) const
+    {
+
+        if (pos + 1 > length())
+            return npos;
+
+        size_t retIndx = 0;
+        size_t foundIndx = npos;
+        
+        for (size_t i = 0; i < text.length(); ++i)
+        {
+            
+            foundIndx = this->rfind(text[i], pos);
+            if (foundIndx > retIndx)
+            {
+                retIndx = foundIndx;
+            }
+        }
+        if (foundIndx != npos)
+            return retIndx;
+        else
+            return npos;
+    }
+
+    size_t find_last_not_of(const MyString& text, size_t pos = npos) const
+    {
+
+        if (pos + 1 > length())
+            return npos;
+
+        size_t retIndx = 0;
+        size_t foundIndx = npos;
+        size_t i = pos;
+        if (pos == npos)
+        {
+            i = length()-1;
+        }
+        for (; i > 0; --i)
+        {
+            foundIndx = text.find(buff_[i]);
+            if (foundIndx == npos)
+            {
+                retIndx = i;
+                break;
+            }
+        }
+        
+        if (foundIndx == npos)
+            return retIndx;
+        else
+            return npos;
+    }
+    
+    size_t find_first_not_of(const MyString& text, size_t pos = 0) const
+    {
+        
+        if (pos + 1 > length())
+            return npos;
+
+        size_t retIndx = npos;
+        
+        for (size_t i =0; i< length(); ++i)
+        {
+
+            auto foundIndx = text.find(buff_[i],0);
+            if (foundIndx == MyString::npos)
+            {
+                retIndx = i;
+                break;
+            }
+        }
+        
+        return retIndx;
+    }
+
     //friend operators   
     friend std::ostream& operator << (std::ostream& oo, const MyString& obj)
     {              
@@ -299,5 +425,5 @@ public:
     
     static inline const size_t npos = -1;
 private:
-    std::vector<char>  buff_;   
+    std::vector<char>  buff_;
 };
